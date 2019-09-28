@@ -49,18 +49,18 @@ html_head_str = """
 }
 
 .lightBoxContent{
-  width:1600px;
-  height:800px;
+  width:90%;
+  height:90%;
   position:fixed;
-  left:6%;
-  top:10%;
+  left:5%;
+  top:5%;
   background:black;
   text-align:center
 }
 
 #imgLoader{
-  width:32px;
-  height:32px;
+  width:60px;
+  height:60px;
   position:fixed;
   left:50%;
   top:50%;
@@ -85,11 +85,26 @@ html_head_str = """
   cursor:pointer;
 }
 
-.lightBoxSprite{background-image:url(imgIcons.png);background-repeat:no-repeat;}
-#lightBoxPrev{left:10px;background-position:2px center;}
-#lightBoxNext{right:10px;background-position:-42px center;}
+.lightBoxSprite{
+  background-image:url(imgIcons.png);
+  background-repeat:no-repeat;
 }
 
+#lightBoxPrev{
+  left:150px;
+  background-position:2px center;
+}
+
+#lightBoxNext{
+  right:150px;
+  background-position:-42px center;
+}
+
+#lightBoxClose{
+  right:150px;
+  top:10%;
+  background-position:-100px center;
+}
 
 </style>
 </head>
@@ -104,7 +119,6 @@ html_end_str = """
 """
 
 html_script_str = """
-
 <script>
 (function(){
     var LightBox = function(options){
@@ -118,6 +132,7 @@ html_script_str = """
         this.imgListClick();
         this.nextBtnClick();
         this.prevBtnClick();
+        this.closeBtnClick();
         this.imgClick();
     };
 
@@ -134,6 +149,7 @@ html_script_str = """
         oHtml +=        '</div>';
         oHtml +=        '<span class="btn lightBoxSprite" id="lightBoxPrev"></span>';
         oHtml +=        '<span class="btn lightBoxSprite" id="lightBoxNext"></span>';
+        oHtml +=        '<span class="btn lightBoxSprite" id="lightBoxClose"></span>';         
         oHtml +=    '</div>';
 
         imgModule.innerHTML = oHtml;
@@ -141,7 +157,6 @@ html_script_str = """
     };
 
     LightBox.prototype.imgListClick = function(){
-        //var imgList = this.getByClass(this.imgListParent, this.imgItemClass);
         var imgList = document.getElementsByClassName("img-m");
         var imgModule = document.getElementById("imgModule");
         var self = this;
@@ -164,18 +179,6 @@ html_script_str = """
         var self = this;
 
         prevBtn.onclick = function(){
-            var imgLight = document.getElementById("imgLight");
-            self.angle = (self.angle+90)%360;
-            imgLight.style.transform = "rotate("+self.angle+"deg)";
-        }
-    };
-/*
-    LightBox.prototype.prevBtnClick = function(){
-        var prevBtn = document.getElementById("lightBoxPrev");
-        var self = this;
-
-        prevBtn.onclick = function(){
-            // var imgList = self.getByClass(self.imgListParent, self.imgItemClass);
             var imgList = document.getElementsByClassName("img-m");
             
             self.idx--;
@@ -188,14 +191,12 @@ html_script_str = """
             self.imgLoad(src);
         }
     };
-*/
 
     LightBox.prototype.nextBtnClick = function(){
         var nextBtn = document.getElementById("lightBoxNext");
         var self = this;
         
         nextBtn.onclick = function(){
-            // var imgList = self.getByClass(self.imgListParent, self.imgItemClass);
             var imgList = document.getElementsByClassName("img-m");
 
             self.idx++;            
@@ -208,6 +209,27 @@ html_script_str = """
             self.imgLoad(src);
         }
     };
+
+    LightBox.prototype.closeBtnClick = function(){
+        var closeBtn = document.getElementById("lightBoxClose");
+        var imgLight = document.getElementById("imgLight");
+        var imgModule = document.getElementById("imgModule");        
+        
+        closeBtn.onclick = function(){
+            imgModule.style.display = "none";
+            imgLight.src = "";
+        }    
+    };    
+
+    LightBox.prototype.imgClick = function(){
+        var imgLight = document.getElementById("imgLight");
+        var imgModule = document.getElementById("imgModule");
+        
+        imgLight.onclick = function(){
+            self.angle = (self.angle+90)%360;
+            this.style.transform = "rotate("+self.angle+"deg)";
+        }     
+    };    
 
     LightBox.prototype.imgLoad = function(src, callback){
         var imgLight = document.getElementById("imgLight");
@@ -225,15 +247,6 @@ html_script_str = """
         img.src = src;
     };
 
-    LightBox.prototype.imgClick = function(){
-        var imgLight = document.getElementById("imgLight");
-        var imgModule = document.getElementById("imgModule");
-        
-        imgLight.onclick = function(){
-            imgModule.style.display = "none";
-            imgLight.src = "";
-        }
-    };
     window.LightBox = LightBox;
 })();
 
